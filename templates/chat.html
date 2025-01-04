@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Electronics Recommender Bot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="header-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon Logo" class="brand-logo">
+                <div class="header-text">
+                    <h1>Electronics Assistant</h1>
+                    <p>Online • Ready to help</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Container -->
+        <div class="messages-container" id="messagesContainer">
+            <div class="bot-message">
+                <div class="message-content">
+                    <div class="bot-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-bubble">
+                        Hi! I'm your Amazon Electronics shopping assistant. How can I help you today?
+                    </div>
+                </div>
+            </div>
+            <div class="bot-message">
+                <div class="message-content">
+                    <div class="bot-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-bubble">
+                        You can ask me about:
+                        <div class="suggestion-chips">
+                            <button class="chip">Find me headphones</button>
+                            <button class="chip">Best wireless earbuds</button>
+                            <button class="chip">Recommend Airpods</button>
+                            <button class="chip">Smart watch under $200</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-container">
+            <form id="queryForm">
+                <div class="input-wrapper">
+                    <textarea id="textInput" placeholder="Type your message here..." rows="1"></textarea>
+                    <div class="button-group">
+                        <button type="button" id="recordButton" class="action-button">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button type="submit" class="action-button send-button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div id="recordingStatus" class="recording-status"></div>
+            <audio id="audioPlayback" controls style="display: none;"></audio>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let mediaRecorder;
+            let audioChunks = [];
+            let isRecording = false;
+
+            // Handle form submission
+            $("#queryForm").on("submit", async function(e) {
+                e.preventDefault();
+                const textInput = $("#textInput").val().trim();
+
+                if (textInput) {
+                    // Add user message
+                    addMessage("user", textInput);
+                    $("#textInput").val("");
+
+                    try {
+                        // Show loading message
+                        addMessage("bot", "Thinking...", "loading-message");
+
+                        const response = await $.ajax({
+                            url: "/ask",
+                            type: "POST",
+                            data: JSON.stringify({ text: textInput }),
+                            contentType: "application/json",
+                            dataType: "json",
+                        });
+
+                        // Remove the loading message
+                        $(".loading-message").closest(".bot-message").remove();
+
+                        // Handle product response
+                        if (response.products && response.products.length > 0) {
+                            response.products.slice(0, 10).forEach((product, index) => {
+                                const productHtml = `
+                                    <div>
+                                        <strong>${index + 1}. ${product.name}</strong><br>
+                                        <p>${product.description}</p>
+                                        <p><strong>Price:</strong> ${product.price}</p>
+                                        <a href="${product.link}" target="_blank" class="product-link">Click here to view on Amazon</a>
+                                    </div>
+                                `;
+                                addMessage("bot", productHtml);
+                            });
+                        } else if (response.response) {
+                            addMessage("bot", response.response);
+                        } else if (response.error) {
+                            addMessage("bot", response.error);
+                        } else {
+                            addMessage("bot", "Sorry, I couldn't understand your request.");
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                        addMessage("bot", "Sorry, there was an error processing your request.");
+                    }
+                }
+            });
+
+            // Handle audio recording
+            $("#recordButton").on("click", async function() {
+                if (!isRecording) {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        mediaRecorder = new MediaRecorder(stream);
+                        audioChunks = [];
+
+                        mediaRecorder.ondataavailable = (event) => {
+                            if (event.data.size > 0) {
+                                audioChunks.append(event.data);
+                            }
+                        };
+
+                        mediaRecorder.start();
+                    } catch (err) {
+                        console.error(err);
+                    }
+                } else {
+                    mediaRecorder.stop();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

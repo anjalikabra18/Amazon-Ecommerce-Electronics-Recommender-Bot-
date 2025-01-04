@@ -1,0 +1,22 @@
+ecom__env
+.env
+notebook
+Ecommercebot.egg-info
+# Ignore virtual environment
+bot_env/
+env/
+venv/
+ecom__env/
+# Ignore binaries
+*.dll
+*.lib
+
+# Ignore logs and compiled files
+*.log
+*.pyc
+__pycache__/
+
+# Ignore datasets or large files
+*.csv
+*.json
+*.zip
