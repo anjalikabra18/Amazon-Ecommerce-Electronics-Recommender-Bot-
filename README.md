@@ -1,6 +1,6 @@
 # Amazon Electronics Recommender Bot 🔍
 
-The **Amazon Electronics Recommender Bot** is a next-generation AI-powered chatbot that enhances the shopping experience by providing real-time product recommendations based on user queries. The chatbot leverages natural language processing (NLP) techniques to understand user queries and generate appropriate responses. The chatbot integrates with the e-commerce store's product database to provide personalized recommendations and information about available products. By leveraging advanced AI technologies, this bot supports multimodal inputs such as text, voice, and image to offer personalized product insights.
+The **Amazon Electronics Recommender Bot** is a next-generation AI-powered chatbot that enhances the shopping experience by providing real-time product recommendations based on user queries. The chatbot leverages natural language processing (NLP) techniques to understand user queries and generate appropriate responses. The chatbot integrates with the e-commerce store's product database to provide personalized recommendations and information about available products. By leveraging advanced AI technologies, this bot supports multimodal inputs such as text and voice to offer personalized product insights.
 
 ---
 ![image](https://github.com/user-attachments/assets/2b9d3a34-1a95-47b8-b3a9-9f75f9c787a6)
@@ -32,7 +32,7 @@ The **Amazon Electronics Recommender Bot** is a next-generation AI-powered chatb
 
 - **Text Input:** Processed by OpenAI's language model.
 - **Voice Input:** Converted to text using Whisper AI.
-- **Image Input:** Captions generated using BLIP.
+-
 
 ---
 
@@ -40,7 +40,7 @@ The **Amazon Electronics Recommender Bot** is a next-generation AI-powered chatb
 
 - **Frontend:** HTML, CSS, JavaScript (jQuery)
 - **Backend:** Flask (Python)
-- **AI Models:** OpenAI, Whisper, BLIP (image captioning)
+- **AI Models:** OpenAI, Whisper
 - **Vector Store:** AstraDB VectorStore
 - **Web Scraping:** BeautifulSoup, Requests
 - **Multimodal Tools:** gTTS, Pandas, LangChain
@@ -58,7 +58,7 @@ The **Amazon Electronics Recommender Bot** is a next-generation AI-powered chatb
 4. **Web Scraping:**
    - The bot scrapes Amazon's website in real-time to retrieve product information.
 5. **Multimodal Processing:**
-   - Handles text, voice, and image inputs to ensure robust interaction.
+   - Handles text, voice inputs to ensure robust interaction.
 6. **Semantic Search with Embeddings:**
    - Converts user queries and product data into embeddings using OpenAI models.
    - Allows the bot to understand user intent and provide more relevant responses.
@@ -114,7 +114,7 @@ The **Amazon Electronics Recommender Bot** is a next-generation AI-powered chatb
    ```
 2. **Interact with the Bot:**
    - Open your browser and go to `http://localhost:5000`.
-   - Type queries, upload images, or record audio for personalized recommendations.
+   - Type queries or record audio for personalized recommendations.
 
 ---
 
